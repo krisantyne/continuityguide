@@ -34,6 +34,9 @@ import de.unidue.continuityguide.Maker.Variable;
 
 
 
+/**
+ * Indexing, classification and automatic evaluation for Continuity Guide
+ */
 public class ContinuityGuide {
 
 	static TransportClient client;
@@ -43,6 +46,10 @@ public class ContinuityGuide {
 	
 	
 	
+	/**
+	 * Initialization creates the TransportClient for communicating with Elasticsearch and
+	 * reads the properties file
+	 */
 	public ContinuityGuide() {
 		Settings settings = Settings.builder()
 				.put("client.transport.sniff", true).build();
@@ -85,6 +92,9 @@ public class ContinuityGuide {
 	}
 	
 	
+	/**
+	 * Automatic evaluation, prints results on console
+	 */
 	public void evaluate() {
 		
 		float sumPrecicison = 0;
@@ -95,11 +105,8 @@ public class ContinuityGuide {
 		xmldocs = new File(test).listFiles();
 
 		ArrayList<File> fileList = new ArrayList<File>(Arrays.asList(xmldocs));
-
-		//Random randomGenerator = new Random();
 		
 		for(int i=0; i < fileList.size(); i++) {
-			//int randomno = randomGenerator.nextInt(fileList.size());
 			
 			String filepath = fileList.get(i).getPath();
 			Variable v = Maker.parse(filepath);
@@ -131,6 +138,12 @@ public class ContinuityGuide {
 	}
  	
 	
+	/**
+	 * Calculates Precision for one study
+	 * @param real Real category
+	 * @param suggested Suggested categories
+	 * @return Precision
+	 */
 	private float calcPrecision(String real, List<String> suggested) {
 
 		int retrieved = suggested.size();
@@ -151,6 +164,12 @@ public class ContinuityGuide {
 	}
 
 
+	/**
+	 * Calculates Recall for one study
+	 * @param real Real category
+	 * @param suggested Suggested categories
+	 * @return Recall
+	 */
 	private float calcRecall(String real, List<String> suggested) {
 
 		int relevant = 1;
@@ -167,6 +186,10 @@ public class ContinuityGuide {
 	}
 	
 	
+	/**
+	 * Creates continuityguide index in Elasticsearch or resets it if it already exists, 
+	 * creates index mappings, fills index with data from the megadoc files
+	 */
 	public void makeIndex() {
 		
 		boolean exists = client.admin().indices()
@@ -259,6 +282,11 @@ public class ContinuityGuide {
 		}
 	}
 	
+	/**
+	 * Megadocument classifier implementation using MoreLikeThis function from Elasticsearch
+	 * @param inFile
+	 * @return
+	 */
 	public List<String> classify(String inFile) {
 		XContentBuilder newDoc = buildXContent(Maker.parse(inFile));
 
@@ -305,6 +333,11 @@ public class ContinuityGuide {
 	}
 	
 	
+	/**
+	 * Makes JSON from a megadocument file
+	 * @param inFile The megadocument file
+	 * @return JSON formatted content
+	 */
 	private Map<String, Object> parseMegadoc(String inFile) {
 		org.jdom2.Document doc = new org.jdom2.Document();
 		try {
@@ -331,6 +364,11 @@ public class ContinuityGuide {
 		return jsonDocument;
 	}
 	
+	/**
+	 * Transforms Variable object into JSON format for Elasticsearch
+	 * @param v Input Variable
+	 * @return XContentBuilder with JSON of the Variable
+	 */
 	private XContentBuilder buildXContent(Variable v) {
 		XContentBuilder newDoc = null;
 		if (v != null) {

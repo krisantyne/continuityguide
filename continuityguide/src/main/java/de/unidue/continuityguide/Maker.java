@@ -19,6 +19,10 @@ import org.jdom2.output.XMLOutputter;
 import com.opencsv.CSVReader;
 
 
+/**
+ * Makes the variable documents from the CSV format tables and makes megadocs from the variable
+ * documents
+ */
 public class Maker {
 
 	static List<Category> prelimCategories = new ArrayList<Category>();
@@ -121,6 +125,9 @@ public class Maker {
 			"9267 Version number"
 	};
 	
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
@@ -133,6 +140,12 @@ public class Maker {
 		
 	}
 	
+	/**
+	 * For each category in the list: Reads all variable XML files from the training directory, takes the
+	 * field contents from those who belong to that category and then writes the megadoc to the megadoc
+	 * category
+	 * (You have to edit the folder paths, I couldn't get it to work with String[] args input)
+	 */
 	private static void makeMegaDocs() {
 
 		File sourceDirectory = new File("/Users/Martina/Desktop/continuityguide/train");
@@ -188,6 +201,10 @@ public class Maker {
 		}
 	}
 	
+	/**
+	 * Makes the variable docs from the information extracted from the CSV files, choosing the level 2
+	 * category as final category if available
+	 */
 	private static void makeVariableDocs() {
 		for (int i=0; i<2000; i++) {
 			Variable v = variables.get(i);
@@ -231,6 +248,11 @@ public class Maker {
 	}
 	
 	
+	/**
+	 * Get category name for category number
+	 * @param number Category number
+	 * @return Category number and name put together
+	 */
 	private static String getCategoryName(String number) {
 		
 		for (String s : LEVEL2) {
@@ -242,6 +264,12 @@ public class Maker {
 		return "no";
 	}
 	
+	/**
+	 * Get full category path for a variable
+	 * @param inCat Leaf category the variable has in the CSV
+	 * @param resultCats Full category path for the variable that will be filled when this recursive
+	 * method is done
+	 */
 	private static void getCategoriesForDoc(String inCat, List<String> resultCats) {
 		
 		for (Category c : categories) {
@@ -253,6 +281,9 @@ public class Maker {
 		
 	}
 	
+	/**
+	 * Build category list
+	 */
 	private static void parseCategories() {
 		String csvFile = "/Users/Martina/Desktop/continuityguide/tkey_Category.csv";
 
@@ -270,6 +301,9 @@ public class Maker {
 	}
 	
 	
+	/**
+	 * Fill child categories for every category in the category list
+	 */
 	private static void fillChildCats() {
 		
 
@@ -309,6 +343,9 @@ public class Maker {
 	}
 	
 	
+	/**
+	 * Build variables from the two CSV files
+	 */
 	private static void parseVariables() {
 		String csvFile = "/Users/Martina/Desktop/continuityguide/trel_VariableCategory.csv";
 
@@ -345,6 +382,11 @@ public class Maker {
         }
 	}
 	
+	/**
+	 * Variable object from file
+	 * @param inFile Variable file
+	 * @return Variable object
+	 */
 	public static Variable parse(String inFile) {
 		org.jdom2.Document doc = new org.jdom2.Document();
 		try {
@@ -365,6 +407,9 @@ public class Maker {
 		return new Variable(studyno, varino, id, label, qtext, null, null, category);
 	}
 	
+	/**
+	 * Category object for easy passing around of information
+	 */
 	public static class Category {
 		String id;
 		String name;
@@ -396,6 +441,9 @@ public class Maker {
 	}
 	
 	
+	/**
+	 * Variable object for easy passing around of information
+	 */
 	public static class Variable {
 		String studyno;
 		String varino;

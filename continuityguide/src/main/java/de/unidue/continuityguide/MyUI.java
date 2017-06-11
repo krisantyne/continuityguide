@@ -75,6 +75,9 @@ public class MyUI extends UI {
 	}
 
 
+	/**
+	 * Upload handling
+	 */
 	class DocUploader implements Receiver, SucceededListener {
 		public File file;
 
@@ -92,6 +95,9 @@ public class MyUI extends UI {
 
 		}
 
+		/**
+		 * Fills the UI with content of the uploaded file and category suggestions
+		 */
 		public void uploadSucceeded(SucceededEvent event) {
 			List<String> suggestions = continuityguide.classify(tempFile.getPath());
 			
@@ -110,6 +116,12 @@ public class MyUI extends UI {
 		}
 	};
 
+	
+	/**
+	 * Shows the contents (ID, Study number, Variable number, Label, Question Text) of the uploaded file
+	 * in the UI
+	 * @param v Variable object to get the information from
+	 */
 	private void fillVarContent(Variable v) {
 		varContent.setValue( 
 				"<h2>Variable:</h2>" +
