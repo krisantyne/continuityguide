@@ -204,6 +204,8 @@ public class Maker {
 	/**
 	 * Makes the variable docs from the information extracted from the CSV files, choosing the level 2
 	 * category as final category if available
+	 * There's a problem with "too many files open at the same time" if you try to make all docs at once,
+	 * so after each run change the loop to "int i=2000; i<4000" and so on
 	 */
 	private static void makeVariableDocs() {
 		for (int i=0; i<2000; i++) {
